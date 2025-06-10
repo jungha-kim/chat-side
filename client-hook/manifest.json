@@ -1,0 +1,7 @@
+{
+  "manifest_version": 3,
+  "name": "ChatSide Hook",
+  "version": "0.1",
+  "permissions": ["scripting","activeTab"],
+  "background": { "service_worker": "background.js" }
+}

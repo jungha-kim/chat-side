@@ -1,0 +1,36 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.3
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181      # ← 필수
+      ZOOKEEPER_TICK_TIME: 2000        # (선택) 내부 타이밍 설정
+      ZOOKEEPER_SYNC_LIMIT: 2          # (선택) 내부 타이밍 설정
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.3        # ← 8.0 대신 7.0.3 or latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1       # (트랜잭션 로그에도 동일하게 적용)
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1                # ISR 최소치도 1로
+      
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: chat
+      POSTGRES_PASSWORD: chat
+      POSTGRES_DB: chatdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
