@@ -34,7 +34,7 @@ public class ChatConsumer {
             repo.save(fm);
 
             //별도 토픽으로도 발행
-            kafka.send("flagged-messages", msg);
+            kafka.send("flagged-messages", msg, msg);
             //SSE 클라이언트에 실시한 push
             publisher.publish(fm);
         } else {
